@@ -1,5 +1,12 @@
 ;; This is an operating system configuration generated
 ;; by the graphical installer.
+;; works with guix v1.3.0
+;;   guix a0178d3
+;;    repository URL: https://git.savannah.gnu.org/git/guix.git
+;;    commit: a0178d34f582b50e9bdbb0403943129ae5b560ff
+;; later some adjustments are necessary,
+;; e.g. https://gitlab.com/mbakke/guix-sway-example/-/issues/1
+
 
 (define-module (sway)
   #:use-module (gnu)
@@ -145,23 +152,35 @@
                  (extra-options
                   '("--max-jobs=3" "--cores=3"
                     "--gc-keep-outputs" "--cache-failures")))))))
-    (bootloader
-     (bootloader-configuration
-      (bootloader grub-efi-bootloader)
-      (theme (grub-theme
-              (inherit (grub-theme))
-              (gfxmode '("1024x768x32"))))
-      (target "/boot/efi")
-      (keyboard-layout keyboard-layout)))
-    (file-systems
-     (cons* (file-system
-              (mount-point "/")
-              (device "/dev/sda1")
-              (type "ext4"))
-            (file-system
-              (mount-point "/boot/efi")
-              (device "/dev/sda2")
-              (type "vfat"))
-            %base-file-systems))))
+    (bootloader (bootloader-configuration
+                 (bootloader grub-bootloader)
+                 (target "/dev/vda")
+                 (terminal-outputs '(console))))
+
+    (file-systems (cons (file-system
+                         (mount-point "/")
+                         (device "/dev/vda1")
+                         (type "ext4"))
+                        %base-file-systems))
+    ;; (bootloader
+    ;;  (bootloader-configuration
+    ;;   (bootloader grub-efi-bootloader)
+    ;;   (theme (grub-theme
+    ;;           (inherit (grub-theme))
+    ;;           (gfxmode '("1024x768x32"))))
+    ;;   (target "/boot/efi")
+    ;;   (keyboard-layout keyboard-layout)))
+    ;; (file-systems
+    ;;  (cons* (file-system
+    ;;           (mount-point "/")
+    ;;           (device "/dev/sda1")
+    ;;           (type "ext4"))
+    ;;         (file-system
+    ;;           (mount-point "/boot/efi")
+    ;;           (device "/dev/sda2")
+    ;;           (type "vfat"))
+    ;;         %base-file-systems))
+
+    ))
 
 %sway-os
